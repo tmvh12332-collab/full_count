@@ -1373,6 +1373,10 @@
         height: 100%;
         transition: 0.5s;
       }
+      .news-img .dream-team-news-image {
+        object-fit: contain;
+        background: #081427;
+      }
       .news-card:hover img {
         transform: scale(1.08);
       }
@@ -2438,32 +2442,56 @@
 
             <div class="field">
               <div class="lineup" id="lineup">
-                <button class="slot" data-position="SP" aria-label="선발 투수 선택">
+                <button
+                  class="slot"
+                  data-position="SP"
+                  aria-label="선발 투수 선택"
+                >
                   <span class="slot-details">
                     <b>＋</b><small>선발 투수</small><span>SP</span>
                   </span>
                 </button>
-                <button class="slot" data-position="LF" aria-label="좌익수 선택">
+                <button
+                  class="slot"
+                  data-position="LF"
+                  aria-label="좌익수 선택"
+                >
                   <span class="slot-details">
                     <b>＋</b><small>좌익수</small><span>LF</span>
                   </span>
                 </button>
-                <button class="slot" data-position="RF" aria-label="우익수 선택">
+                <button
+                  class="slot"
+                  data-position="RF"
+                  aria-label="우익수 선택"
+                >
                   <span class="slot-details">
                     <b>＋</b><small>우익수</small><span>RF</span>
                   </span>
                 </button>
-                <button class="slot" data-position="CF" aria-label="중견수 선택">
+                <button
+                  class="slot"
+                  data-position="CF"
+                  aria-label="중견수 선택"
+                >
                   <span class="slot-details">
                     <b>＋</b><small>중견수</small><span>CF</span>
                   </span>
                 </button>
-                <button class="slot" data-position="SS" aria-label="유격수 선택">
+                <button
+                  class="slot"
+                  data-position="SS"
+                  aria-label="유격수 선택"
+                >
                   <span class="slot-details">
                     <b>＋</b><small>유격수</small><span>SS</span>
                   </span>
                 </button>
-                <button class="slot" data-position="3B" aria-label="3루수 선택">
+                <button
+                  class="slot"
+                  data-position="3B"
+                  aria-label="3루수 선택"
+                >
                   <span class="slot-details">
                     <b>＋</b><small>3루수</small><span>3B</span>
                   </span>
@@ -2473,12 +2501,20 @@
                     <b>＋</b><small>포수</small><span>C</span>
                   </span>
                 </button>
-                <button class="slot" data-position="2B" aria-label="2루수 선택">
+                <button
+                  class="slot"
+                  data-position="2B"
+                  aria-label="2루수 선택"
+                >
                   <span class="slot-details">
                     <b>＋</b><small>2루수</small><span>2B</span>
                   </span>
                 </button>
-                <button class="slot" data-position="1B" aria-label="1루수 선택">
+                <button
+                  class="slot"
+                  data-position="1B"
+                  aria-label="1루수 선택"
+                >
                   <span class="slot-details">
                     <b>＋</b><small>1루수</small><span>1B</span>
                   </span>
@@ -2751,8 +2787,9 @@
             <article class="news-card reveal delay2">
               <div class="news-img">
                 <img
-                  src="https://images.unsplash.com/photo-1508344928928-7165b0d1b1b8?auto=format&fit=crop&w=900&q=85"
-                  alt="야구 경기장"
+                  class="dream-team-news-image"
+                  src="dream-team-banner.png"
+                  alt="나만의 드림팀 야구 선수 이미지"
                 />
               </div>
               <div class="news-body">
