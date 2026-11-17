@@ -539,6 +539,9 @@
         height: 100%;
         transition: 0.6s;
       }
+      .play-card img.korea-team-image {
+        object-position: center top;
+      }
       .play-card:hover img {
         transform: scale(1.08);
       }
@@ -1963,7 +1966,7 @@
           </p>
 
           <div class="hero-actions reveal delay3">
-            <a href="#gameplay" class="btn">게임 알아보기 ↗</a>
+            <a href="#about" class="btn">게임 알아보기 ↗</a>
             <a href="#players" class="btn btn-dark">선수 컬렉션 보기</a>
           </div>
         </div>
@@ -2087,8 +2090,9 @@
             <div class="play-side">
               <article class="play-card reveal right">
                 <img
-                  src="https://images.unsplash.com/photo-1508344928928-7165b0d1b1b8?auto=format&fit=crop&w=900&q=85"
-                  alt="야구장"
+                  class="korea-team-image"
+                  src="korea-dream-team.png"
+                  alt="대한민국 야구 드림팀"
                 />
                 <div class="play-info">
                   <small>02 / TEAM MANAGEMENT</small>
@@ -3173,6 +3177,24 @@
 ================================= */
       const roster = [
         {
+          name: "김지찬",
+          position: "CF",
+          rating: 92,
+          image: "kim-ji-chan.png",
+        },
+        {
+          name: "문현빈",
+          position: "LF",
+          rating: 92,
+          image: "moon-hyun-bin.png",
+        },
+        {
+          name: "안현민",
+          position: "RF",
+          rating: 93,
+          image: "ahn-hyun-min.png",
+        },
+        {
           name: "류현진",
           position: "SP",
           rating: 96,
@@ -3203,9 +3225,24 @@
           image: "noh-si-hwan.png",
         },
         { name: "정우람", position: "RP", rating: 92 },
-        { name: "김혜성", position: "2B", rating: 94 },
-        { name: "박병호", position: "1B", rating: 90 },
-        { name: "김광현", position: "SP", rating: 91 },
+        {
+          name: "김혜성",
+          position: "2B",
+          rating: 94,
+          image: "kim-hye-seong.png",
+        },
+        {
+          name: "박병호",
+          position: "1B",
+          rating: 90,
+          image: "park-byung-ho.png",
+        },
+        {
+          name: "김광현",
+          position: "SP",
+          rating: 91,
+          image: "kim-kwang-hyun.png",
+        },
         { name: "가상 선수", position: "OF", rating: 92 },
       ];
 
@@ -3240,22 +3277,13 @@
       }
 
       function getEligiblePlayers(position) {
-        const rosterPosition =
-          position === "SP"
-            ? "SP"
-            : position === "C"
-              ? "C"
-              : position === "SS"
-                ? "SS"
-                : position === "3B"
-                  ? "3B"
-                  : position === "2B"
-                    ? "2B"
-                    : position === "1B"
-                      ? "1B"
-                      : "OF";
+        const rosterPositions = ["LF", "CF", "RF"].includes(position)
+          ? [position, "OF"]
+          : [position];
 
-        return roster.filter((player) => player.position === rosterPosition);
+        return roster.filter((player) =>
+          rosterPositions.includes(player.position),
+        );
       }
 
       function renderSlot(slot, player) {
@@ -3321,11 +3349,30 @@
 
         const position = activeSlot.dataset.position;
         const slot = activeSlot;
+        const previousPosition = Object.keys(selectedPlayers).find(
+          (selectedPosition) =>
+            selectedPosition !== position &&
+            selectedPlayers[selectedPosition].name === player.name,
+        );
+
+        if (previousPosition) {
+          delete selectedPlayers[previousPosition];
+          lineupSlots.forEach((previousSlot) => {
+            if (previousSlot.dataset.position === previousPosition) {
+              renderSlot(previousSlot, null);
+            }
+          });
+        }
+
         selectedPlayers[position] = player;
         renderSlot(slot, player);
         updateTeamRating();
         closePlayerPicker();
-        toast(`${player.name} 선수 등록 완료!`);
+        toast(
+          previousPosition
+            ? `${player.name} 선수가 ${positionLabels[position]}로 이동했습니다.`
+            : `${player.name} 선수 등록 완료!`,
+        );
       }
 
       function openPlayerPicker(slot) {
