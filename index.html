@@ -768,10 +768,17 @@
         margin: 15px 0 12px;
         display: grid;
         place-items: center;
+        overflow: hidden;
         background: linear-gradient(145deg, #344c3a, #0d2115);
         color: var(--green);
         font: 900 55px var(--display);
         border-radius: 3px;
+      }
+      .pc-portrait img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 25%;
       }
       .pc-name {
         text-align: center;
@@ -847,102 +854,226 @@
       }
       .field {
         position: relative;
-        min-height: 560px;
-        padding: 55px 20px;
-        background:
-          repeating-linear-gradient(
-            90deg,
-            transparent 0 49.8%,
-            #ffffff09 50% 50.2%
-          ),
-          linear-gradient(0deg, #28533b, #376b43);
+        width: 100%;
+        aspect-ratio: 785 / 522;
+        background: #101812 url("lineup-position-map.png") center / 100% 100%
+          no-repeat;
         border: 2px solid #ffffff33;
         overflow: hidden;
       }
-      .field:before {
-        content: "";
-        position: absolute;
-        width: 75%;
-        height: 90%;
-        border: 2px solid #ffffff40;
-        border-radius: 50%;
-        top: 5%;
-        left: 12.5%;
-      }
-      .field:after {
-        content: "";
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 30%;
-        height: 35%;
-        border: 2px solid #ffffff40;
-        transform: translate(-50%, -50%) rotate(45deg);
-      }
-      .field-line {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 50%;
-        height: 2px;
-        background: #ffffff40;
-      }
       .lineup {
-        position: relative;
+        position: absolute;
+        inset: 0;
         z-index: 2;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(3, 115px);
-        gap: 10px;
-        max-width: 760px;
-        margin: auto;
       }
       .slot {
+        position: absolute;
+        left: var(--slot-x);
+        top: var(--slot-y);
+        transform: translate(-50%, -50%);
+        width: clamp(44px, 7.5vw, 96px);
+        aspect-ratio: 1.35;
+        padding: 4px 2px;
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-direction: column;
-        gap: 5px;
-        border: 1px dashed #ffffff88;
-        background: #0003;
+        border: 1px solid var(--green);
+        border-radius: 4px;
+        background: rgba(8, 13, 10, 0.9);
         color: white;
         min-width: 0;
-        transition: 0.2s;
+        transition: 0.2s ease;
+        cursor: pointer;
       }
-      .slot:hover {
-        background: #d5ff5433;
-        border-color: var(--green);
+      .slot:hover,
+      .slot:focus-visible {
+        transform: translate(-50%, -50%) scale(1.08);
+        background: #17231b;
+        outline: 2px solid var(--green);
+        outline-offset: 2px;
       }
       .slot b {
-        font: 900 23px var(--display);
+        font: 900 clamp(14px, 2vw, 22px) var(--display);
       }
       .slot small {
-        font-size: 9px;
+        font-size: clamp(7px, 0.8vw, 10px);
+        line-height: 1.2;
       }
       .slot span {
-        font-size: 10px;
+        font-size: clamp(7px, 0.85vw, 10px);
         font-weight: 900;
       }
-      .slot:nth-child(1) {
-        grid-column: 2;
+      .slot[data-position="SP"] {
+        --slot-x: 55%;
+        --slot-y: 50%;
       }
-      .slot:nth-child(2) {
-        grid-column: 1;
+      .slot[data-position="LF"] {
+        --slot-x: 17%;
+        --slot-y: 23%;
       }
-      .slot:nth-child(3) {
-        grid-column: 3;
+      .slot[data-position="RF"] {
+        --slot-x: 83%;
+        --slot-y: 23%;
       }
-      .slot:nth-child(4) {
-        grid-column: 2;
+      .slot[data-position="CF"] {
+        --slot-x: 50%;
+        --slot-y: 20%;
       }
-      .slot:nth-child(5) {
-        grid-column: 1;
+      .slot[data-position="SS"] {
+        --slot-x: 35%;
+        --slot-y: 35%;
       }
-      .slot:nth-child(6) {
-        grid-column: 3;
+      .slot[data-position="3B"] {
+        --slot-x: 12%;
+        --slot-y: 46%;
       }
-      .slot:nth-child(7) {
-        grid-column: 2;
+      .slot[data-position="C"] {
+        --slot-x: 42%;
+        --slot-y: 87%;
+      }
+      .slot[data-position="2B"] {
+        --slot-x: 65%;
+        --slot-y: 35%;
+      }
+      .slot[data-position="1B"] {
+        --slot-x: 88%;
+        --slot-y: 46%;
+      }
+      .slot .slot-details {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        width: 100%;
+      }
+      .slot img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 3px;
+      }
+      .slot.is-filled::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        border-radius: 3px;
+        background: linear-gradient(180deg, #0002 15%, #000d 100%);
+      }
+      .slot.is-filled .slot-details {
+        z-index: 2;
+        height: 100%;
+        justify-content: flex-end;
+        text-shadow: 0 1px 3px #000;
+      }
+      .slot-monogram {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: grid;
+        place-items: center;
+        color: var(--green);
+        background: linear-gradient(145deg, #344c3a, #0d2115);
+        font: 900 24px var(--display);
+      }
+      .player-picker[hidden] {
+        display: none;
+      }
+      .player-picker {
+        position: fixed;
+        inset: 0;
+        z-index: 1200;
+        display: grid;
+        place-items: center;
+        padding: 20px;
+        overflow: visible;
+      }
+      .player-picker-backdrop {
+        position: absolute;
+        inset: 0;
+        background: #000b;
+        backdrop-filter: blur(5px);
+      }
+      .player-picker-dialog {
+        position: relative;
+        z-index: 1;
+        width: min(620px, 100%);
+        max-height: min(80vh, 700px);
+        overflow: auto;
+        padding: 30px;
+        background: var(--dark);
+        border: 1px solid var(--line);
+      }
+      .player-picker-dialog h3 {
+        margin: 10px 0 20px;
+        font-size: 24px;
+      }
+      .player-picker-close {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 36px;
+        height: 36px;
+        border: 1px solid var(--line);
+        background: transparent;
+        color: var(--white);
+        font-size: 22px;
+      }
+      .player-picker-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 10px;
+      }
+      .player-option {
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        border: 1px solid var(--line);
+        background: #1b281f;
+        color: var(--white);
+        text-align: left;
+        transition: border-color 0.2s, transform 0.2s;
+      }
+      .player-option:hover,
+      .player-option:focus-visible {
+        border-color: var(--green);
+        transform: translateY(-3px);
+        outline: none;
+      }
+      .player-option img,
+      .player-option .player-placeholder {
+        width: 100%;
+        height: 110px;
+        object-fit: cover;
+        object-position: center 25%;
+      }
+      .player-option .player-placeholder {
+        display: grid;
+        place-items: center;
+        background: linear-gradient(145deg, #344c3a, #0d2115);
+        color: var(--green);
+        font: 900 38px var(--display);
+      }
+      .player-option strong {
+        display: block;
+        font-size: 12px;
+      }
+      .player-option small {
+        display: block;
+        margin-top: 4px;
+        color: var(--gray);
+        font-size: 10px;
+      }
+      .player-picker-empty {
+        grid-column: 1 / -1;
+        padding: 20px;
+        color: var(--gray);
+        text-align: center;
       }
       .builder-controls {
         display: flex;
@@ -1583,13 +1714,6 @@
         .player-card {
           flex-basis: calc((100% - 34px) / 3);
         }
-        .field {
-          min-height: 480px;
-          padding: 40px 10px;
-        }
-        .lineup {
-          grid-template-rows: repeat(3, 95px);
-        }
         .mission-summary {
           padding: 30px;
         }
@@ -1675,19 +1799,18 @@
           align-items: flex-start;
           flex-direction: column;
         }
-        .field {
-          min-height: 410px;
-          padding: 30px 5px;
+        .player-picker-dialog {
+          padding: 24px 16px;
         }
-        .lineup {
-          grid-template-rows: repeat(3, 75px);
-          gap: 6px;
+        .player-option img,
+        .player-option .player-placeholder {
+          height: 90px;
         }
         .slot b {
-          font-size: 18px;
+          font-size: 14px;
         }
         .slot small {
-          font-size: 8px;
+          font-size: 7px;
         }
         .mission-list {
           padding: 12px;
@@ -2116,7 +2239,9 @@
                   <span class="pc-rating">96</span
                   ><span class="pc-position">SP</span>
                 </div>
-                <div class="pc-portrait">RY</div>
+                <div class="pc-portrait">
+                  <img src="ryu-hyun-jin.png" alt="류현진 선수 사진" />
+                </div>
                 <div class="pc-name">류현진</div>
                 <div class="pc-team">STARTING PITCHER</div>
                 <div class="pc-stats">
@@ -2132,7 +2257,9 @@
                   <span class="pc-rating">95</span
                   ><span class="pc-position">OF</span>
                 </div>
-                <div class="pc-portrait">JH</div>
+                <div class="pc-portrait">
+                  <img src="lee-jung-hoo.png" alt="이정후 선수 사진" />
+                </div>
                 <div class="pc-name">이정후</div>
                 <div class="pc-team">OUTFIELDER</div>
                 <div class="pc-stats">
@@ -2148,7 +2275,9 @@
                   <span class="pc-rating">94</span
                   ><span class="pc-position">SS</span>
                 </div>
-                <div class="pc-portrait">HS</div>
+                <div class="pc-portrait">
+                  <img src="kim-ha-seong.png" alt="김하성 선수 사진" />
+                </div>
                 <div class="pc-name">김하성</div>
                 <div class="pc-team">SHORTSTOP</div>
                 <div class="pc-stats">
@@ -2164,7 +2293,9 @@
                   <span class="pc-rating">93</span
                   ><span class="pc-position">C</span>
                 </div>
-                <div class="pc-portrait">MH</div>
+                <div class="pc-portrait">
+                  <img src="kang-min-ho.png" alt="강민호 선수 사진" />
+                </div>
                 <div class="pc-name">강민호</div>
                 <div class="pc-team">CATCHER</div>
                 <div class="pc-stats">
@@ -2180,7 +2311,9 @@
                   <span class="pc-rating">94</span
                   ><span class="pc-position">3B</span>
                 </div>
-                <div class="pc-portrait">NS</div>
+                <div class="pc-portrait">
+                  <img src="noh-si-hwan.png" alt="노시환 선수 사진" />
+                </div>
                 <div class="pc-name">노시환</div>
                 <div class="pc-team">THIRD BASE</div>
                 <div class="pc-stats">
@@ -2304,42 +2437,59 @@
             </div>
 
             <div class="field">
-              <div class="field-line"></div>
               <div class="lineup" id="lineup">
-                <button class="slot" data-position="SP">
-                  <b>＋</b><small>선발 투수</small><span>SP</span>
+                <button class="slot" data-position="SP" aria-label="선발 투수 선택">
+                  <span class="slot-details">
+                    <b>＋</b><small>선발 투수</small><span>SP</span>
+                  </span>
                 </button>
-                <button class="slot" data-position="LF">
-                  <b>＋</b><small>좌익수</small><span>LF</span>
+                <button class="slot" data-position="LF" aria-label="좌익수 선택">
+                  <span class="slot-details">
+                    <b>＋</b><small>좌익수</small><span>LF</span>
+                  </span>
                 </button>
-                <button class="slot" data-position="RF">
-                  <b>＋</b><small>우익수</small><span>RF</span>
+                <button class="slot" data-position="RF" aria-label="우익수 선택">
+                  <span class="slot-details">
+                    <b>＋</b><small>우익수</small><span>RF</span>
+                  </span>
                 </button>
-                <button class="slot" data-position="CF">
-                  <b>＋</b><small>중견수</small><span>CF</span>
+                <button class="slot" data-position="CF" aria-label="중견수 선택">
+                  <span class="slot-details">
+                    <b>＋</b><small>중견수</small><span>CF</span>
+                  </span>
                 </button>
-                <button class="slot" data-position="SS">
-                  <b>＋</b><small>유격수</small><span>SS</span>
+                <button class="slot" data-position="SS" aria-label="유격수 선택">
+                  <span class="slot-details">
+                    <b>＋</b><small>유격수</small><span>SS</span>
+                  </span>
                 </button>
-                <button class="slot" data-position="3B">
-                  <b>＋</b><small>3루수</small><span>3B</span>
+                <button class="slot" data-position="3B" aria-label="3루수 선택">
+                  <span class="slot-details">
+                    <b>＋</b><small>3루수</small><span>3B</span>
+                  </span>
                 </button>
-                <button class="slot" data-position="C">
-                  <b>＋</b><small>포수</small><span>C</span>
+                <button class="slot" data-position="C" aria-label="포수 선택">
+                  <span class="slot-details">
+                    <b>＋</b><small>포수</small><span>C</span>
+                  </span>
                 </button>
-                <button class="slot" data-position="2B">
-                  <b>＋</b><small>2루수</small><span>2B</span>
+                <button class="slot" data-position="2B" aria-label="2루수 선택">
+                  <span class="slot-details">
+                    <b>＋</b><small>2루수</small><span>2B</span>
+                  </span>
                 </button>
-                <button class="slot" data-position="1B">
-                  <b>＋</b><small>1루수</small><span>1B</span>
+                <button class="slot" data-position="1B" aria-label="1루수 선택">
+                  <span class="slot-details">
+                    <b>＋</b><small>1루수</small><span>1B</span>
+                  </span>
                 </button>
               </div>
             </div>
 
             <div class="builder-controls">
               <p>
-                포지션을 클릭하면 선수를 선택할 수 있습니다.<br />선택한 선수는
-                해당 포지션에 배치됩니다.
+                필드 이미지의 포지션을 눌러 선수를 선택하세요.<br />선택한 선수는
+                해당 위치에 배치됩니다.
               </p>
               <button id="resetTeam">라인업 초기화 ↻</button>
             </div>
@@ -2716,6 +2866,28 @@
       </section>
     </main>
 
+    <div class="player-picker" id="playerPicker" hidden>
+      <div class="player-picker-backdrop" id="playerPickerBackdrop"></div>
+      <section
+        class="player-picker-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="playerPickerTitle"
+      >
+        <button
+          class="player-picker-close"
+          id="closePlayerPicker"
+          type="button"
+          aria-label="선수 선택 창 닫기"
+        >
+          ×
+        </button>
+        <div class="section-label">PLAYER SELECT</div>
+        <h3 id="playerPickerTitle">선수를 선택하세요</h3>
+        <div class="player-picker-grid" id="playerPickerGrid"></div>
+      </section>
+    </div>
+
     <section class="contact-us" aria-labelledby="contact-title">
       <div class="wrap">
         <div>
@@ -2963,11 +3135,36 @@
    07. TEAM BUILDER
 ================================= */
       const roster = [
-        { name: "류현진", position: "SP", rating: 96 },
-        { name: "이정후", position: "OF", rating: 95 },
-        { name: "김하성", position: "SS", rating: 94 },
-        { name: "강민호", position: "C", rating: 93 },
-        { name: "노시환", position: "3B", rating: 94 },
+        {
+          name: "류현진",
+          position: "SP",
+          rating: 96,
+          image: "ryu-hyun-jin.png",
+        },
+        {
+          name: "이정후",
+          position: "OF",
+          rating: 95,
+          image: "lee-jung-hoo.png",
+        },
+        {
+          name: "김하성",
+          position: "SS",
+          rating: 94,
+          image: "kim-ha-seong.png",
+        },
+        {
+          name: "강민호",
+          position: "C",
+          rating: 93,
+          image: "kang-min-ho.png",
+        },
+        {
+          name: "노시환",
+          position: "3B",
+          rating: 94,
+          image: "noh-si-hwan.png",
+        },
         { name: "정우람", position: "RP", rating: 92 },
         { name: "김혜성", position: "2B", rating: 94 },
         { name: "박병호", position: "1B", rating: 90 },
@@ -2977,7 +3174,22 @@
 
       const lineupSlots = document.querySelectorAll(".slot");
       const teamRating = document.getElementById("teamRating");
+      const playerPicker = document.getElementById("playerPicker");
+      const playerPickerTitle = document.getElementById("playerPickerTitle");
+      const playerPickerGrid = document.getElementById("playerPickerGrid");
+      const positionLabels = {
+        SP: "선발 투수",
+        LF: "좌익수",
+        RF: "우익수",
+        CF: "중견수",
+        SS: "유격수",
+        "3B": "3루수",
+        C: "포수",
+        "2B": "2루수",
+        "1B": "1루수",
+      };
       const selectedPlayers = {};
+      let activeSlot = null;
 
       function updateTeamRating() {
         const values = Object.values(selectedPlayers);
@@ -2990,53 +3202,175 @@
         teamRating.textContent = String(avg).padStart(2, "0") + " OVR";
       }
 
-      lineupSlots.forEach((slot) => {
-        slot.addEventListener("click", () => {
-          const position = slot.dataset.position;
+      function getEligiblePlayers(position) {
+        const rosterPosition =
+          position === "SP"
+            ? "SP"
+            : position === "C"
+              ? "C"
+              : position === "SS"
+                ? "SS"
+                : position === "3B"
+                  ? "3B"
+                  : position === "2B"
+                    ? "2B"
+                    : position === "1B"
+                      ? "1B"
+                      : "OF";
 
-          const candidates = roster.filter((player) =>
-            position === "SP"
-              ? player.position === "SP"
-              : position === "C"
-                ? player.position === "C"
-                : position === "SS"
-                  ? player.position === "SS"
-                  : position === "3B"
-                    ? player.position === "3B"
-                    : position === "2B"
-                      ? player.position === "2B"
-                      : position === "1B"
-                        ? player.position === "1B"
-                        : player.position === "OF",
-          );
+        return roster.filter((player) => player.position === rosterPosition);
+      }
 
-          const names = candidates
-            .map((p) => `${p.name} (${p.rating})`)
-            .join("\n");
-          const choice = prompt(
-            `${position} 포지션 선수 선택\n\n${names}\n\n선수 이름을 입력하세요.`,
-          );
+      function renderSlot(slot, player) {
+        const position = slot.dataset.position;
+        const details = document.createElement("span");
+        details.className = "slot-details";
+        slot.replaceChildren();
 
-          if (!choice) return;
+        if (player) {
+          slot.classList.add("is-filled");
 
-          const player = candidates.find((p) => p.name === choice.trim());
-
-          if (!player) {
-            toast("해당 포지션의 선수를 선택해주세요.");
-            return;
+          if (player.image) {
+            const image = document.createElement("img");
+            image.src = player.image;
+            image.alt = "";
+            slot.appendChild(image);
+          } else {
+            const monogram = document.createElement("span");
+            monogram.className = "slot-monogram";
+            monogram.textContent = player.name.charAt(0);
+            slot.appendChild(monogram);
           }
 
-          selectedPlayers[position] = player;
+          const rating = document.createElement("b");
+          rating.textContent = player.rating;
+          const name = document.createElement("small");
+          name.textContent = player.name;
+          const positionLabel = document.createElement("span");
+          positionLabel.textContent = position;
+          details.append(rating, name, positionLabel);
+          slot.setAttribute(
+            "aria-label",
+            `${positionLabels[position]}: ${player.name}. 다른 선수 선택`,
+          );
+        } else {
+          slot.classList.remove("is-filled");
+          const plus = document.createElement("b");
+          plus.textContent = "＋";
+          const label = document.createElement("small");
+          label.textContent = positionLabels[position];
+          const positionLabel = document.createElement("span");
+          positionLabel.textContent = position;
+          details.append(plus, label, positionLabel);
+          slot.setAttribute(
+            "aria-label",
+            `${positionLabels[position]} 선수 선택`,
+          );
+        }
 
-          slot.innerHTML = `
-   <b>${player.rating}</b>
-   <small>${player.name}</small>
-   <span>${position}</span>
-  `;
+        slot.appendChild(details);
+      }
 
-          updateTeamRating();
-          toast(`${player.name} 선수 등록 완료!`);
+      function closePlayerPicker() {
+        if (playerPicker.hidden) return;
+
+        playerPicker.hidden = true;
+        if (activeSlot) activeSlot.focus();
+        activeSlot = null;
+      }
+
+      function choosePlayer(player) {
+        if (!activeSlot) return;
+
+        const position = activeSlot.dataset.position;
+        const slot = activeSlot;
+        selectedPlayers[position] = player;
+        renderSlot(slot, player);
+        updateTeamRating();
+        closePlayerPicker();
+        toast(`${player.name} 선수 등록 완료!`);
+      }
+
+      function openPlayerPicker(slot) {
+        const position = slot.dataset.position;
+        activeSlot = slot;
+        playerPickerTitle.textContent = `${positionLabels[position]} 선수 선택`;
+        playerPickerGrid.replaceChildren();
+
+        const candidates = getEligiblePlayers(position);
+        if (!candidates.length) {
+          const emptyMessage = document.createElement("p");
+          emptyMessage.className = "player-picker-empty";
+          emptyMessage.textContent = "선택할 수 있는 선수가 없습니다.";
+          playerPickerGrid.appendChild(emptyMessage);
+        }
+
+        candidates.forEach((player) => {
+          const option = document.createElement("button");
+          option.className = "player-option";
+          option.type = "button";
+          option.addEventListener("click", () => choosePlayer(player));
+
+          if (player.image) {
+            const image = document.createElement("img");
+            image.src = player.image;
+            image.alt = "";
+            option.appendChild(image);
+          } else {
+            const placeholder = document.createElement("span");
+            placeholder.className = "player-placeholder";
+            placeholder.textContent = player.name.charAt(0);
+            option.appendChild(placeholder);
+          }
+
+          const info = document.createElement("span");
+          const name = document.createElement("strong");
+          name.textContent = player.name;
+          const rating = document.createElement("small");
+          rating.textContent = `${player.position} · ${player.rating} OVR`;
+          info.append(name, rating);
+          option.appendChild(info);
+          playerPickerGrid.appendChild(option);
         });
+
+        playerPicker.hidden = false;
+        const firstOption = playerPickerGrid.querySelector("button");
+        (firstOption || document.getElementById("closePlayerPicker")).focus();
+      }
+
+      lineupSlots.forEach((slot) => {
+        slot.addEventListener("click", () => openPlayerPicker(slot));
+      });
+
+      document
+        .getElementById("closePlayerPicker")
+        .addEventListener("click", closePlayerPicker);
+      document
+        .getElementById("playerPickerBackdrop")
+        .addEventListener("click", closePlayerPicker);
+      document.addEventListener("keydown", (event) => {
+        if (playerPicker.hidden) return;
+
+        if (event.key === "Escape") {
+          closePlayerPicker();
+          return;
+        }
+
+        if (event.key === "Tab") {
+          const focusable = playerPicker.querySelectorAll(
+            "button:not(:disabled)",
+          );
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        }
       });
 
       document.getElementById("resetTeam").addEventListener("click", () => {
@@ -3044,22 +3378,7 @@
           (key) => delete selectedPlayers[key],
         );
 
-        lineupSlots.forEach((slot) => {
-          const position = slot.dataset.position;
-          const labels = {
-            SP: "선발 투수",
-            LF: "좌익수",
-            RF: "우익수",
-            CF: "중견수",
-            SS: "유격수",
-            "3B": "3루수",
-            C: "포수",
-            "2B": "2루수",
-            "1B": "1루수",
-          };
-
-          slot.innerHTML = `<b>＋</b><small>${labels[position]}</small><span>${position}</span>`;
-        });
+        lineupSlots.forEach((slot) => renderSlot(slot, null));
 
         updateTeamRating();
         toast("라인업이 초기화되었습니다.");
