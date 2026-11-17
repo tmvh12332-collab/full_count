@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>풀카운트 | 고객 문의</title>
+
+    <!-- EmailJS 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Pretendard", "Noto Sans KR", sans-serif;
+        background: #f3f5f8;
+        color: #172b45;
+      }
+
+      /* 상단 메뉴 */
+      header {
+        width: 100%;
+        background: #10233d;
+        color: white;
+        padding: 20px 7%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .logo {
+        font-size: 27px;
+        font-weight: 900;
+        letter-spacing: -1px;
+      }
+
+      .logo span {
+        color: #f5b942;
+      }
+
+      nav {
+        display: flex;
+        gap: 28px;
+      }
+
+      nav a {
+        color: white;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.3s;
+      }
+
+      nav a:hover {
+        color: #f5b942;
+      }
+
+      /* 메인 배너 */
+      .hero {
+        min-height: 300px;
+        background:
+          linear-gradient(rgba(5, 19, 36, 0.75), rgba(5, 19, 36, 0.85)),
+          url("https://images.unsplash.com/photo-1508344928928-7165b0e6a5d8?w=1600")
+            center/cover no-repeat;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: white;
+        padding: 50px 20px;
+      }
+
+      .hero h1 {
+        font-size: clamp(35px, 6vw, 58px);
+        font-weight: 900;
+        margin-bottom: 15px;
+      }
+
+      .hero h1 span {
+        color: #f5b942;
+      }
+
+      .hero p {
+        color: #d5deea;
+        font-size: 16px;
+      }
+
+      /* 문의 영역 */
+      .contact-wrap {
+        max-width: 1100px;
+        margin: 70px auto;
+        padding: 0 20px;
+        display: grid;
+        grid-template-columns: 0.8fr 1.2fr;
+        gap: 30px;
+      }
+
+      /* 왼쪽 안내 */
+      .contact-info {
+        background: #10233d;
+        color: white;
+        border-radius: 20px;
+        padding: 40px 30px;
+      }
+
+      .contact-info h2 {
+        font-size: 27px;
+        margin-bottom: 18px;
+      }
+
+      .contact-info > p {
+        color: #c3cfdd;
+        line-height: 1.8;
+        font-size: 14px;
+      }
+
+      .info-item {
+        margin-top: 35px;
+        padding-top: 22px;
+        border-top: 1px solid #354960;
+      }
+
+      .info-item h3 {
+        color: #f5b942;
+        font-size: 15px;
+        margin-bottom: 8px;
+      }
+
+      .info-item p {
+        color: #dce4ed;
+        font-size: 14px;
+        line-height: 1.7;
+      }
+
+      /* 오른쪽 문의 폼 */
+      .contact-form {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+      }
+
+      .contact-form h2 {
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+
+      .contact-form .description {
+        color: #888;
+        font-size: 14px;
+        margin-bottom: 30px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        font-weight: 700;
+        font-size: 14px;
+        margin-bottom: 9px;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 15px;
+        border: 1px solid #dce1e8;
+        border-radius: 9px;
+        outline: none;
+        font-size: 14px;
+        font-family: inherit;
+        transition: 0.3s;
+        background: #fafbfd;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        border-color: #e2a52b;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(245, 185, 66, 0.12);
+      }
+
+      .form-group textarea {
+        height: 160px;
+        resize: vertical;
+      }
+
+      /* 전송 버튼 */
+      .submit-btn {
+        width: 100%;
+        padding: 17px;
+        background: #10233d;
+        color: white;
+        border: none;
+        border-radius: 9px;
+        font-size: 16px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .submit-btn:hover {
+        background: #e2a52b;
+        color: #10233d;
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      #form-status {
+        margin-top: 18px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.6;
+      }
+
+      /* 하단 */
+      footer {
+        background: #10233d;
+        color: #aab8ca;
+        padding: 30px 20px;
+        text-align: center;
+        font-size: 13px;
+        line-height: 2;
+      }
+
+      footer strong {
+        color: white;
+        font-size: 19px;
+      }
+
+      /* 모바일 반응형 */
+      @media (max-width: 768px) {
+        header {
+          padding: 18px 5%;
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        nav {
+          gap: 15px;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        nav a {
+          font-size: 12px;
+        }
+
+        .contact-wrap {
+          grid-template-columns: 1fr;
+          margin: 40px auto;
+        }
+
+        .contact-form {
+          padding: 25px 20px;
+        }
+
+        .contact-info {
+          padding: 30px 25px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- 상단 메뉴 -->
+    <header>
+      <div class="logo">FULL<span>COUNT</span></div>
+
+      <nav>
+        <a href="#">홈</a>
+        <a href="#">경기정보</a>
+        <a href="#">하이라이트</a>
+        <a href="#">선수정보</a>
+        <a href="#contact">고객문의</a>
+      </nav>
+    </header>
+
+    <!-- 메인 배너 -->
+    <section class="hero">
+      <h1>CONTACT <span>US</span></h1>
+      <p>야구의 모든 순간, 풀카운트와 함께하세요.</p>
+    </section>
+
+    <!-- 문의 영역 -->
+    <main class="contact-wrap" id="contact">
+      <!-- 안내 -->
+      <section class="contact-info">
+        <h2>FULLCOUNT<br />고객센터</h2>
+
+        <p>
+          풀카운트를 이용해 주셔서 감사합니다.<br />
+          서비스 이용 중 불편한 점이나 궁금한 사항을 자유롭게 문의해 주세요.
+        </p>
+
+        <div class="info-item">
+          <h3>01. 일반 문의</h3>
+          <p>홈페이지 이용 및 서비스 관련 문의</p>
+        </div>
+
+        <div class="info-item">
+          <h3>02. 제휴 문의</h3>
+          <p>야구 관련 업체 및 브랜드 제휴 문의</p>
+        </div>
+
+        <div class="info-item">
+          <h3>03. 오류 신고</h3>
+          <p>페이지 오류 및 잘못된 정보 신고</p>
+        </div>
+
+        <div class="info-item">
+          <h3>04. 운영 안내</h3>
+          <p>문의 내용을 확인한 후 등록한 이메일로 답변드릴 수 있습니다.</p>
+        </div>
+      </section>
+
+      <!-- 문의 작성 -->
+      <section class="contact-form">
+        <h2>문의하기</h2>
+
+        <p class="description">
+          아래 내용을 작성하고 문의 보내기를 눌러주세요.
+        </p>
+
+        <form id="contact-form">
+          <div class="form-group">
+            <label for="user_name">이름 *</label>
+            <input
+              type="text"
+              id="user_name"
+              name="user_name"
+              placeholder="이름을 입력해 주세요."
+              maxlength="50"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="user_email">이메일 *</label>
+            <input
+              type="email"
+              id="user_email"
+              name="user_email"
+              placeholder="답변받을 이메일을 입력해 주세요."
+              maxlength="254"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="inquiry_type">문의 유형 *</label>
+
+            <select id="inquiry_type" name="inquiry_type" required>
+              <option value="">문의 유형을 선택해 주세요.</option>
+              <option value="일반 문의">일반 문의</option>
+              <option value="제휴 문의">제휴 문의</option>
+              <option value="광고 문의">광고 문의</option>
+              <option value="오류 신고">오류 신고</option>
+              <option value="기타 문의">기타 문의</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="message">문의 내용 *</label>
+
+            <textarea
+              id="message"
+              name="message"
+              placeholder="문의하실 내용을 자세하게 작성해 주세요."
+              maxlength="3000"
+              required
+            ></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submit-btn">
+            문의 보내기 →
+          </button>
+
+          <p id="form-status" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <!-- 하단 -->
+    <footer>
+      <strong>FULLCOUNT</strong>
+      <p>야구의 모든 순간을 함께하는 풀카운트</p>
+      <p>© 2026 FULLCOUNT. All Rights Reserved.</p>
+    </footer>
+
+    <!-- EmailJS 연결 -->
+    <script>
+      // 1. EmailJS 초기화
+      emailjs.init({
+        publicKey: "YOUR_PUBLIC_KEY",
+      });
+
+      // 2. 문의 폼 연결
+      const form = document.getElementById("contact-form");
+      const status = document.getElementById("form-status");
+      const submitBtn = document.getElementById("submit-btn");
+
+      // 3. 문의 전송
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        status.style.color = "#777";
+        status.textContent = "문의 내용을 전송하고 있습니다...";
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "전송 중...";
+
+        emailjs
+          .sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", form)
+          .then(function (response) {
+            console.log("성공:", response);
+
+            status.style.color = "#159447";
+            status.textContent =
+              "문의가 성공적으로 전송되었습니다! 감사합니다.";
+
+            form.reset();
+          })
+          .catch(function (error) {
+            console.error("실패:", error);
+
+            status.style.color = "#dc3545";
+            status.textContent =
+              "전송에 실패했습니다. 잠시 후 다시 시도해 주세요.";
+          })
+          .finally(function () {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "문의 보내기 →";
+          });
+      });
+    </script>
+  </body>
+</html>

@@ -1350,6 +1350,26 @@
         background: transparent;
         color: #111;
       }
+      .contact-us {
+        padding: 60px 0;
+        background: var(--dark2);
+        border-top: 1px solid var(--line);
+      }
+      .contact-us .wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 30px;
+      }
+      .contact-us h2 {
+        font-size: clamp(24px, 4vw, 38px);
+        font-weight: 900;
+      }
+      .contact-us p {
+        margin-top: 10px;
+        color: var(--gray);
+        font-size: 13px;
+      }
 
       /* FOOTER */
       footer {
@@ -2695,6 +2715,16 @@
         </div>
       </section>
     </main>
+
+    <section class="contact-us" aria-labelledby="contact-title">
+      <div class="wrap">
+        <div>
+          <h2 id="contact-title">궁금한 점이 있으신가요?</h2>
+          <p>문의 사항을 보내주시면 확인 후 안내해 드리겠습니다.</p>
+        </div>
+        <a href="문의하기.html" class="btn">문의하기 →</a>
+      </div>
+    </section>
 
     <footer>
       <div class="wrap">
