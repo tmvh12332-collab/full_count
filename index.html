@@ -1773,6 +1773,20 @@
         margin-top: 18px;
         line-height: 2;
       }
+      .footer-playball {
+        align-self: center;
+        padding: 14px 20px;
+        border: 1px solid #d62828;
+        background: #d62828;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 900;
+        transition: 0.2s;
+      }
+      .footer-playball:hover {
+        background: transparent;
+        color: #ff6b6b;
+      }
       .footer-links {
         display: flex;
         gap: 55px;
@@ -3208,7 +3222,7 @@
                 <div class="draw-result" id="drawResult">준비 완료!</div>
               </div>
 
-              <button class="btn" id="drawButton">행운의 보상 뽑기 ↗</button>
+              <button class="btn" id="drawButton">오늘의 추첨 ↗</button>
               <p class="draw-notice">
                 ※ 포트폴리오 시연용 무작위 보상이며 실제 보상 지급 기능은
                 없습니다.
@@ -3499,6 +3513,10 @@
             <p>새로운 전설이 여기서 시작됩니다.<br />야구 게임 홍보 콘셉트.</p>
           </div>
 
+          <button class="footer-playball" id="playBallButton" type="button">
+            ⚾ 플레이볼!
+          </button>
+
           <div class="footer-links">
             <div class="footer-column">
               <strong>바로가기</strong>
@@ -3530,6 +3548,7 @@
     <div class="toast" id="toast"></div>
     <button class="to-top" id="toTop" aria-label="맨 위로">↑</button>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
       /* =================================
    01. PRELOADER
@@ -4105,6 +4124,7 @@
       ];
 
       const drawKey = "fullcount-draw-" + dateKey;
+      let drawInProgress = false;
 
       function showSavedReward() {
         const saved = localStorage.getItem(drawKey);
@@ -4113,15 +4133,41 @@
           const reward = JSON.parse(saved);
           drawResult.textContent = reward.name;
           giftIcon.textContent = reward.icon;
-          drawButton.textContent = "오늘의 추첨 완료 ✓";
-          drawButton.disabled = true;
         }
       }
 
-      drawButton.addEventListener("click", () => {
-        if (localStorage.getItem(drawKey)) return;
+      drawButton.addEventListener("click", async () => {
+        if (drawInProgress) return;
 
+        if (localStorage.getItem(drawKey)) {
+          await Swal.fire({
+            icon: "error",
+            title: "오늘의 추첨은 이미 완료됐어요",
+            text: "추첨은 하루에 한 번만 참여할 수 있습니다.",
+            footer: '<a href="#event">내일 다시 도전하세요</a>',
+          });
+          return;
+        }
+
+        drawInProgress = true;
         drawButton.disabled = true;
+
+        const { isConfirmed, value: accepted } = await Swal.fire({
+          title: "오늘의 추첨",
+          input: "checkbox",
+          inputValue: 0,
+          inputPlaceholder: "추첨 안내와 유의사항을 확인하고 동의합니다.",
+          confirmButtonText: "추첨하기&nbsp;→",
+          inputValidator: (result) =>
+            !result && "추첨하려면 안내사항에 동의해 주세요.",
+        });
+
+        if (!isConfirmed || !accepted) {
+          drawInProgress = false;
+          drawButton.disabled = false;
+          return;
+        }
+
         drawMachine.classList.add("spinning");
         drawResult.textContent = "추첨 중...";
 
@@ -4133,9 +4179,16 @@
           drawMachine.classList.remove("spinning");
           giftIcon.textContent = reward.icon;
           drawResult.textContent = reward.name;
-          drawButton.textContent = "오늘의 추첨 완료 ✓";
+          drawInProgress = false;
+          drawButton.disabled = false;
 
-          toast("축하합니다! " + reward.name + " 당첨! (데모)");
+          Swal.fire({
+            icon: "success",
+            title: "축하합니다!",
+            text: `${reward.name}에 당첨되었습니다!`,
+            confirmButtonText: "확인",
+            confirmButtonColor: "#D62828",
+          });
         }, 1500);
       });
 
@@ -4180,6 +4233,23 @@
       );
 
       sections.forEach((section) => navObserver.observe(section));
+
+      document
+        .getElementById("playBallButton")
+        .addEventListener("click", () => {
+          Swal.fire({
+            title: "⚾ 플레이볼!",
+            text: "경기는 이제부터 시작입니다! 최고의 선수들과 함께 당신만의 야구 역사를 만들어 보세요.",
+            imageUrl: "images/playball-stadium.png",
+            imageWidth: 400,
+            imageHeight: 200,
+            imageAlt: "Baseball Stadium",
+            confirmButtonText: "경기 시작하기!",
+            confirmButtonColor: "#D62828",
+            background: "#ffffff",
+            color: "#222222",
+          });
+        });
     </script>
   </body>
 </html>
